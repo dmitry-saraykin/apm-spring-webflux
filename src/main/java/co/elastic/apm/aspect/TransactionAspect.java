@@ -1,6 +1,7 @@
 package co.elastic.apm.aspect;
 
 import co.elastic.apm.api.ElasticApm;
+import co.elastic.apm.api.Span;
 import co.elastic.apm.api.Transaction;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -76,6 +77,64 @@ public class TransactionAspect {
             transaction.end();
             CURRENT_TRANSACTION.set(null);
         }
+    }
+    
+    public static Transaction currentTransaction() {
+        Transaction transaction = CURRENT_TRANSACTION.get();
+        if (transaction == null) {
+            return new Transaction() {
+                
+                @Override
+                public void setUser(String id, String email, String username) {
+                }
+                
+                @Override
+                public void setType(String type) {
+                    
+                }
+                
+                @Override
+                public void setName(String name) {
+                    
+                }
+                
+                @Override
+                public void end() {
+                }
+                
+                @Override
+                public Span createSpan() {
+                    return new Span() {
+                        
+                        @Override
+                        public void setType(String type) {
+                            
+                        }
+                        
+                        @Override
+                        public void setName(String name) {
+                            
+                        }
+                        
+                        @Override
+                        public void end() {
+                            
+                        }
+                        
+                        @Override
+                        public Span createSpan() {
+                            return this;
+                        }
+                    };
+                }
+                
+                @Override
+                public void addTag(String key, String value) {
+                    
+                }
+            };
+        }
+        return transaction;
     }
 
     
