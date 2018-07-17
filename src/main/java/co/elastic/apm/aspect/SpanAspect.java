@@ -29,7 +29,7 @@ public class SpanAspect {
         if (!annotation.name().isEmpty()) {
             span.setName(annotation.name());
         } else {
-            span.setName(methodSignature.getDeclaringType().getSimpleName() + "#" + methodSignature.getName());
+            span.setName(jp.getTarget().getClass().getSimpleName() + "#" + methodSignature.getName());
         }
         if (!annotation.type().isEmpty()) {
             span.setType(annotation.type());
