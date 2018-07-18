@@ -42,6 +42,10 @@ public class ApmService {
     }
     
     public static Transaction currentTransaction() {
-        return CURRENT_TRANSACTION.get();
+        Transaction transaction = CURRENT_TRANSACTION.get();
+        if (transaction == null) {
+            return NoopTransaction.INSTANCE;
+        }
+        return transaction;
     }
 }
