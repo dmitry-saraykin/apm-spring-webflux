@@ -16,7 +16,7 @@ public class ElasticApmFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         Transaction transaction = ElasticApm.startAsyncTransaction();
         transaction.setType(Transaction.TYPE_REQUEST);
-        transaction.setName(exchange.getRequest().getPath().toString());
+        transaction.setName(exchange.getRequest().getMethod().name() + " " + exchange.getRequest().getURI().getPath());
         return chain.filter(exchange)
                 .subscriberContext(context -> context.put(TRANSACTION_ATTRIBUTE, transaction))
                     .doOnSuccess(nothing -> {
