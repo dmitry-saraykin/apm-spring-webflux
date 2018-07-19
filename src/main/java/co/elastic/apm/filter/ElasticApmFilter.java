@@ -3,6 +3,7 @@ package co.elastic.apm.filter;
 import co.elastic.apm.api.ElasticApm;
 import co.elastic.apm.api.Transaction;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -14,6 +15,9 @@ public class ElasticApmFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) {
+            return chain.filter(exchange);
+        }
         Transaction transaction = ElasticApm.startAsyncTransaction();
         transaction.setType(Transaction.TYPE_REQUEST);
         transaction.setName(exchange.getRequest().getMethod().name() + " " + exchange.getRequest().getURI().getPath());
