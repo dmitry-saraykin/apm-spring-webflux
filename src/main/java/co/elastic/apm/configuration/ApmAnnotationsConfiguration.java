@@ -24,7 +24,7 @@ public class ApmAnnotationsConfiguration {
         return new SpanAspect();
     }
     
-    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @Order(Ordered.HIGHEST_PRECEDENCE + 1)
     @Bean
     public WebFilter elasticApmFilter() {
         return new ElasticApmFilter();
