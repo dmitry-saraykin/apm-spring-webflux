@@ -7,6 +7,10 @@ public class ExceptionWrapper extends Exception {
         super(getMessage(cause, action), cause);
     }
     
+    public ExceptionWrapper(Throwable cause, String action, String url) {
+        super(getMessage(cause, action) + ". Url: " + url, cause);
+    }
+    
     private static String getMessage(Throwable cause, String action) {
         if (action != null) {
             return cause.getMessage() + ". action=" + action;

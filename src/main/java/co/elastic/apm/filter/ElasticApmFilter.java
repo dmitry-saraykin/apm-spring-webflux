@@ -5,6 +5,7 @@ import co.elastic.apm.api.Transaction;
 import co.elastic.apm.exception.ExceptionWrapper;
 
 import org.springframework.http.HttpMethod;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -18,7 +19,8 @@ public class ElasticApmFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) {
+        ServerHttpRequest request = exchange.getRequest();
+        if (request.getMethod() == HttpMethod.OPTIONS) {
             return chain.filter(exchange);
         }
         Transaction transaction = ElasticApm.startAsyncTransaction();
@@ -34,11 +36,7 @@ public class ElasticApmFilter implements WebFilter {
                 .doOnSuccess(nothing -> {
                     transaction.end();
                 }).doOnError(e->{
-                    if (action.get() != null) {
-                        ElasticApm.captureException(new ExceptionWrapper(e, action.get()));
-                    } else {
-                        ElasticApm.captureException(e);
-                    }
+                    ElasticApm.captureException(new ExceptionWrapper(e, action.get(), request.getMethodValue() + " " + request.getURI()));
                     transaction.end();
                 }).doOnCancel(() -> {
                      transaction.end();
