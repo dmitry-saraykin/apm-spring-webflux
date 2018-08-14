@@ -6,6 +6,7 @@ import co.elastic.apm.exception.ExceptionWrapper;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -36,7 +37,11 @@ public class ElasticApmFilter implements WebFilter {
                 .doOnSuccess(nothing -> {
                     transaction.end();
                 }).doOnError(e->{
-                    ElasticApm.captureException(new ExceptionWrapper(e, action.get(), request.getMethodValue() + " " + request.getURI()));
+                    String url = request.getURI().getPath();
+                    if (!StringUtils.isEmpty(request.getURI().getQuery())) {
+                        url += "?" + request.getURI().getQuery();
+                    }
+                    ElasticApm.captureException(new ExceptionWrapper(e, action.get(), request.getMethodValue() + " " + url));
                     transaction.end();
                 }).doOnCancel(() -> {
                      transaction.end();
