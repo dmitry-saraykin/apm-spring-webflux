@@ -55,6 +55,9 @@ public class ElasticApmFilter implements WebFilter {
                         if (!StringUtils.isEmpty(request.getURI().getQuery())) {
                             url += "?" + request.getURI().getQuery();
                         }
+                        if ("/".equals(url) || "/favicon.ico".equals(url)) {
+                            return;
+                        }
                         ElasticApm.captureException(new ExceptionWrapper(e, action.get(), request.getMethodValue() + " " + url));
                     }
                     transaction.end();
