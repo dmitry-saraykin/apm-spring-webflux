@@ -9,7 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <spring.version>5.0.4.RELEASE</spring.version>
+        <spring.version>5.0.10.RELEASE</spring.version>
         <elastic-apm.version>0.7.0-SNAPSHOT</elastic-apm.version>
         <aspectj.version>1.9.1</aspectj.version>
     </properties>
@@ -105,7 +105,7 @@
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
-            <version>3.1.4.RELEASE</version>
+            <version>3.1.10.RELEASE</version>
         </dependency>
     </dependencies>
 </project>
